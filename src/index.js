@@ -5,8 +5,8 @@ let canvas = document.getElementById("gameSpace");
 
 let ctx = canvas.getContext("2d");
 
-const GAMEWIDTH = 800;
-const GAMEHEIGHT = 600;
+const GAMEWIDTH = canvas.width;
+const GAMEHEIGHT = canvas.height;
 
 let ship = new Ship();
 new InputHandler(ship);
