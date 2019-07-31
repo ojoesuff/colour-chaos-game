@@ -10,9 +10,13 @@ export default class Ship {
     this.radians = 0;
     this.speed = 6;
     this.velocity = 6;
+    this.leftPressed = false;
+    this.rightPressed = false;
+    this.spacePressed = false;
   }
 
   draw(ctx) {
+    // console.log(this.input.leftPressed);
     //calculated with formula found @ https://www.mathopenref.com/coordcentroid.html
     let centre = {
       x: (this.position.x + (this.position.x + this.width) * 2) / 3,
