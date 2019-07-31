@@ -1,14 +1,14 @@
 export default class Ship {
   constructor() {
     this.position = {
-      x: 100,
-      y: 100
+      x: 500,
+      y: 500
     };
-    this.height = 100;
-    this.width = 100;
+    this.height = 30;
+    this.width = 40;
     this.degrees = 0;
     this.radians = 0;
-    this.speed = 6;
+    this.rotationSpeed = 6;
     this.velocity = 6;
     this.leftPressed = false;
     this.rightPressed = false;
@@ -16,7 +16,22 @@ export default class Ship {
   }
 
   draw(ctx) {
-    // console.log(this.input.leftPressed);
+    if (this.leftPressed) {
+      //rotate ship anticlockwise
+      this.degrees -= this.rotationSpeed;
+    }
+    if (this.rightPressed) {
+      //rotate ship clockwise
+      this.degrees += this.rotationSpeed;
+    }
+    if (this.spacePressed) {
+      //accelerate ship
+      let x1 = Math.cos(this.radians) * this.velocity;
+      let y1 = Math.sin(this.radians) * this.velocity;
+
+      this.position.x -= x1;
+      this.position.y -= y1;
+    }
     //calculated with formula found @ https://www.mathopenref.com/coordcentroid.html
     let centre = {
       x: (this.position.x + (this.position.x + this.width) * 2) / 3,
@@ -48,23 +63,5 @@ export default class Ship {
   update(deltaTime) {
     this.degrees = this.degrees % 360;
     this.radians = (this.degrees * Math.PI) / 180;
-  }
-
-  rotateAntiClock() {
-    //rotate ship anticlockwise
-    this.degrees -= this.speed;
-  }
-
-  rotateClock() {
-    //rotate ship clockwise
-    this.degrees += this.speed;
-  }
-
-  accelerate() {
-    let x1 = Math.cos(this.radians) * this.velocity;
-    let y1 = Math.sin(this.radians) * this.velocity;
-
-    this.position.x -= x1;
-    this.position.y -= y1;
   }
 }
