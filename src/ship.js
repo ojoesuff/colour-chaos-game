@@ -15,7 +15,7 @@ export default class Ship {
     this.leftPressed = false;
     this.rightPressed = false;
     this.spacePressed = false;
-    this.collisionBounce = this.velocity * 6;
+    this.collisionBounce = 0;
   }
 
   draw(ctx) {
@@ -48,7 +48,8 @@ export default class Ship {
   }
 
   update(deltaTime, gameWidth, gameHeight) {
-    console.log(`${this.position.x}, ${this.position.y}`);
+    // console.log(`${this.position.x}, ${this.position.y}`);
+    console.log(this.degrees);
     let collisionDetected = detectCollision(this, gameWidth, gameHeight);
     //move ship
     if (this.leftPressed) {
@@ -68,10 +69,20 @@ export default class Ship {
       //reverse ship
       this.position.x += x1;
       this.position.y += y1;
-      //rotate ship
-      this.degrees += this.rotationSpeed * 2;
+      //rotate ship depending on orientation
+      if (
+        (this.degrees >= 0 && this.degrees < 180) ||
+        (this.degrees > -360 && this.degrees <= -180)
+      ) {
+        this.degrees += this.rotationSpeed * 2;
+      } else {
+        this.degrees -= this.rotationSpeed * 2;
+      }
+
       //reduce bounce each time
-      this.collisionBounce /= 2;
+      this.collisionBounce -= this.collisionBounce / 2;
+    } else {
+      this.collisionBounce = 10;
     }
     if (this.spacePressed && collisionDetected) {
       //accelerate ship
