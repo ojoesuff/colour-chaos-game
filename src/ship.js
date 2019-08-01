@@ -1,3 +1,5 @@
+import { detectCollision } from "./collisionDetection";
+
 export default class Ship {
   constructor() {
     this.position = {
@@ -13,25 +15,10 @@ export default class Ship {
     this.leftPressed = false;
     this.rightPressed = false;
     this.spacePressed = false;
+    this.collisionBounce = this.velocity * 6;
   }
 
   draw(ctx) {
-    if (this.leftPressed) {
-      //rotate ship anticlockwise
-      this.degrees -= this.rotationSpeed;
-    }
-    if (this.rightPressed) {
-      //rotate ship clockwise
-      this.degrees += this.rotationSpeed;
-    }
-    if (this.spacePressed) {
-      //accelerate ship
-      let x1 = Math.cos(this.radians) * this.velocity;
-      let y1 = Math.sin(this.radians) * this.velocity;
-
-      this.position.x -= x1;
-      this.position.y -= y1;
-    }
     //calculated with formula found @ https://www.mathopenref.com/coordcentroid.html
     let centre = {
       x: (this.position.x + (this.position.x + this.width) * 2) / 3,
@@ -60,7 +47,48 @@ export default class Ship {
     // console.log(`${centre.x}, ${centre.y}`);
   }
 
-  update(deltaTime) {
+  update(deltaTime, gameWidth, gameHeight) {
+    console.log(`${this.position.x}, ${this.position.y}`);
+    let collisionDetected = detectCollision(this, gameWidth, gameHeight);
+    //move ship
+    if (this.leftPressed) {
+      //rotate ship anticlockwise
+      this.degrees -= this.rotationSpeed;
+    }
+    if (this.rightPressed) {
+      //rotate ship clockwise
+      this.degrees += this.rotationSpeed;
+    }
+    if (collisionDetected) {
+      //bounce off wall
+      //calculate angle
+      let x1 = Math.cos(this.radians) * (this.velocity + this.collisionBounce);
+      let y1 = Math.sin(this.radians) * (this.velocity + this.collisionBounce);
+
+      //reverse ship
+      this.position.x += x1;
+      this.position.y += y1;
+      //rotate ship
+      this.degrees += this.rotationSpeed * 2;
+      //reduce bounce each time
+      this.collisionBounce /= 2;
+    }
+    if (this.spacePressed && collisionDetected) {
+      //accelerate ship
+      let x1 = Math.cos(this.radians) * (this.velocity * 0.3);
+      let y1 = Math.sin(this.radians) * (this.velocity * 0.3);
+
+      this.position.x -= x1;
+      this.position.y -= y1;
+    } else if (this.spacePressed) {
+      //accelerate ship
+      let x1 = Math.cos(this.radians) * this.velocity;
+      let y1 = Math.sin(this.radians) * this.velocity;
+
+      this.position.x -= x1;
+      this.position.y -= y1;
+    }
+    //rotate ship
     this.degrees = this.degrees % 360;
     this.radians = (this.degrees * Math.PI) / 180;
   }

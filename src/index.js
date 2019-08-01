@@ -19,7 +19,7 @@ function gameLoop(timestamp) {
   lastTime = timestamp;
 
   ctx.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT);
-  ship.update(deltaTime);
+  ship.update(deltaTime, GAMEWIDTH, GAMEHEIGHT);
   ship.draw(ctx);
 
   requestAnimationFrame(gameLoop);
