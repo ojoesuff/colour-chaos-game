@@ -9,15 +9,20 @@ export function detectCollision(ship, gameWidth, gameHeight) {
   let leftOfGame = 0 - ship.width / 3;
   let rightOfGame = gameWidth;
 
+  let collisionSide;
+
   //ship is draw sideways so top of ship is facing the left of the stage
-  if (
-    topOfShip <= leftOfGame ||
-    bottomOfShip >= rightOfGame ||
-    leftOfShip >= bottomOfGame ||
-    rightOfShip <= topOfGame
-  ) {
-    return true;
+  if (topOfShip <= leftOfGame) {
+    collisionSide = "left";
+  } else if (bottomOfShip >= rightOfGame) {
+    collisionSide = "right";
+  } else if (leftOfShip >= bottomOfGame) {
+    collisionSide = "bottom";
+  } else if (rightOfShip <= topOfGame) {
+    collisionSide = "top";
   } else {
-    return false;
+    collisionSide = false;
   }
+
+  return collisionSide;
 }

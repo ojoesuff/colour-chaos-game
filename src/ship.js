@@ -69,16 +69,39 @@ export default class Ship {
       //reverse ship
       this.position.x += x1;
       this.position.y += y1;
-      //rotate ship depending on orientation
-      if (
-        (this.degrees >= 0 && this.degrees < 180) ||
-        (this.degrees > -360 && this.degrees <= -180)
-      ) {
-        this.degrees += this.rotationSpeed * 2;
-      } else {
-        this.degrees -= this.rotationSpeed * 2;
+      //rotate ship depending on orientation and which wall hit
+      switch (collisionDetected) {
+        case "left":
+          if (this.degrees >= 0 && this.degrees < 180) {
+            this.degrees += this.rotationSpeed * 2;
+          } else {
+            this.degrees -= this.rotationSpeed * 2;
+          }
+          break;
+        case "right":
+          if (this.degrees >= 0 && this.degrees < 180) {
+            this.degrees -= this.rotationSpeed * 2;
+          } else {
+            this.degrees += this.rotationSpeed * 2;
+          }
+          break;
+        case "top":
+          if (this.degrees >= 90 && this.degrees < 270) {
+            this.degrees += this.rotationSpeed * 2;
+          } else {
+            this.degrees -= this.rotationSpeed * 2;
+          }
+          break;
+        case "bottom":
+          if (this.degrees >= 90 && this.degrees < 270) {
+            this.degrees -= this.rotationSpeed * 2;
+          } else {
+            this.degrees += this.rotationSpeed * 2;
+          }
+          break;
+        default:
+          break;
       }
-
       //reduce bounce each time
       this.collisionBounce -= this.collisionBounce / 2;
     } else {
@@ -86,8 +109,8 @@ export default class Ship {
     }
     if (this.spacePressed && collisionDetected) {
       //accelerate ship
-      let x1 = Math.cos(this.radians) * (this.velocity * 0.3);
-      let y1 = Math.sin(this.radians) * (this.velocity * 0.3);
+      let x1 = Math.cos(this.radians) * (this.velocity * 0.0003);
+      let y1 = Math.sin(this.radians) * (this.velocity * 0.0003);
 
       this.position.x -= x1;
       this.position.y -= y1;
@@ -99,8 +122,9 @@ export default class Ship {
       this.position.x -= x1;
       this.position.y -= y1;
     }
+    //keep degrees positive and below 360
+    this.degrees = (360 + this.degrees) % 360;
     //rotate ship
-    this.degrees = this.degrees % 360;
     this.radians = (this.degrees * Math.PI) / 180;
   }
 }
