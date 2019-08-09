@@ -4,10 +4,11 @@ export function detectCollision(ship, gameWidth, gameHeight) {
   let leftOfShip = ship.position.y + ship.height;
   let rightOfShip = ship.position.y;
 
-  let topOfGame = 0;
-  let bottomOfGame = gameHeight;
-  let leftOfGame = 0 - ship.width / 3;
-  let rightOfGame = gameWidth;
+  let testField = 0;
+  let topOfGame = 0 + testField;
+  let bottomOfGame = gameHeight - testField;
+  let leftOfGame = 0 - ship.width / 3 + testField;
+  let rightOfGame = gameWidth + testField;
 
   let collisionSide;
 

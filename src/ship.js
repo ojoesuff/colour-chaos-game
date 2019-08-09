@@ -3,8 +3,8 @@ import { detectCollision } from "./collisionDetection";
 export default class Ship {
   constructor() {
     this.position = {
-      x: 500,
-      y: 500
+      x: 400,
+      y: 400
     };
     this.height = 30;
     this.width = 40;
@@ -48,8 +48,7 @@ export default class Ship {
   }
 
   update(deltaTime, gameWidth, gameHeight) {
-    // console.log(`${this.position.x}, ${this.position.y}`);
-    console.log(this.degrees);
+    console.log(`${this.position.x}, ${this.position.y}`);
     let collisionDetected = detectCollision(this, gameWidth, gameHeight);
     //move ship
     if (this.leftPressed) {
@@ -61,14 +60,6 @@ export default class Ship {
       this.degrees += this.rotationSpeed;
     }
     if (collisionDetected) {
-      //bounce off wall
-      //calculate angle
-      let x1 = Math.cos(this.radians) * (this.velocity + this.collisionBounce);
-      let y1 = Math.sin(this.radians) * (this.velocity + this.collisionBounce);
-
-      //reverse ship
-      this.position.x += x1;
-      this.position.y += y1;
       //rotate ship depending on orientation and which wall hit
       switch (collisionDetected) {
         case "left":
@@ -102,10 +93,33 @@ export default class Ship {
         default:
           break;
       }
+      //fix bug that reverses ship permanently when too far out of canvas size
+      let errorSize = 10;
+      let errorFix = 3;
+      if (this.position.x <= -errorSize) {
+        this.position.x += errorFix;
+      }
+      if (this.position.x >= gameWidth + errorSize) {
+        this.position.x -= errorFix;
+      }
+      if (this.position.y <= -errorSize) {
+        this.position.y += errorFix;
+      }
+      if (this.position.y >= gameHeight + errorSize) {
+        this.position.y -= errorSize;
+      }
+      //bounce off wall
+      //calculate angle
+      let x1 = Math.cos(this.radians) * (this.velocity + this.collisionBounce);
+      let y1 = Math.sin(this.radians) * (this.velocity + this.collisionBounce);
+
+      //reverse ship
+      this.position.x += x1;
+      this.position.y += y1;
       //reduce bounce each time
       this.collisionBounce -= this.collisionBounce / 2;
     } else {
-      this.collisionBounce = 10;
+      this.collisionBounce = 3;
     }
     if (this.spacePressed && collisionDetected) {
       //accelerate ship

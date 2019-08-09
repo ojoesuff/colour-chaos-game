@@ -14,6 +14,10 @@ export default class InputHandler {
           //spacebar
           ship.spacePressed = true;
           break;
+        case 38:
+          //up arrow
+          ship.spacePressed = true;
+          break;
         default:
           break;
       } //end switch
@@ -31,6 +35,10 @@ export default class InputHandler {
           break;
         case 32:
           //spacebar
+          ship.spacePressed = false;
+          break;
+        case 38:
+          //up arrow
           ship.spacePressed = false;
           break;
         default:
